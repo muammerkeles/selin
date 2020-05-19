@@ -1,0 +1,40 @@
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+body{
+  
+  font-family: Open Sans;
+  font-size:14px;
+}
+.full-wr {
+        padding: 10px;
+        border: dotted 1px #cecece;
+    }
+ .calendar-wrapper .inner-of {
+  padding: 10px;
+  border: dashed 1px #cecece;
+}
+.btn-lg, .btn-group-lg > .btn {
+  padding: 1rem 3rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.1875rem;
+}
+.py-1 {
+  overflow: hidden;
+  border-radius: 50%;
+  width:70px;
+  height:70px;
+  box-shadow:1px 1px 1px #fff;
+}
+.py-1 img {
+    max-width: 100%;
+}
+.list-wrpapper.rs-container{
+    overflow: auto;
+  max-height: 300px;
+    min-width: 250px;
+}
+button.active{
+  
+}
