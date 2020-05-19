@@ -279,21 +279,3 @@
     return date;
   }
   
-  //////////////////////////////////////////////
-   window.addEventListener("load", function(event) {
-      reInitSelin();
-    });
-  
-    function reInitSelin() {
-    console.log("postponding..");
-      if (typeof $.fn.Selin != "function") {
-        setTimeout(function() {
-          console.log("postponding..");
-          reInitSelin();
-        }, 2500);
-        return false;
-      }
-      $(".selino").Selin({
-        years: [2019, 2020, 2021]
-      });
-    }
