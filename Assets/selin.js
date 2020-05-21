@@ -1,15 +1,25 @@
-//console.clear();
+/*
+Selin V1.
 
+
+
+*/
 
 (function($) {
     var Selino = function() {
       var defaults = {
-          years: [new Date().getFullYear()]
+          years: [new Date().getFullYear()],
+          daysTo:[1,7]    ///  haftanın bu günlerini seçer
         },
         elem,
         collector = [],
         currentIndex = 0,
         fill = function() {
+          if(collector.length==0)
+          {
+            console.log("Selin! ", "Data boş");
+            return false;
+          }
           elem.append(
             $(doms.display).find(".inner-of").append(
               doms.buttons.left, doms.scene,
@@ -67,32 +77,42 @@
           }
         },
         moveNext = function() {
+          console.log("ci",currentIndex);
           if (currentIndex <= 0) {
-            alert("reached zero !")
-            return false;
+            currentIndex=collector.length-1;
+            //alert("reached zero !")
+            //return false;
+          }else{
+            currentIndex--;
           }
-          currentIndex--;
           applySelection();
         },
         movePrev = function() {
-          if ((currentIndex ) >= collector.length) {
-            alert("reached the last index!")
-            return false;
+          console.log("ci prev",currentIndex);
+
+          if ((currentIndex ) >= collector.length-1) {
+            currentIndex=0;
+            //alert("reached the last index!")
+            //return false;
+          }else{
+            currentIndex++;
           }
-          currentIndex++;
           applySelection();
         },
         /// create calendar datas
         pring = function(year, month) {
+        
           var currentDate = new Date(year, month, 0);
           var currentMonth = currentDate.getMonth(); //new Date().getMonth();
           var today = new Date();
-  
+   
   
           var getDaysInMonth = function(_month, _year) {
             return new Date(_year, _month, 0).getDate();
-          };
+          }; 
+
           var dayCount = getDaysInMonth(currentMonth, year);
+
           for (i = 0; i <= dayCount; i++) {
   
   
@@ -104,65 +124,88 @@
               return false;
             } else {
   
+              
   
-              if (date.getDay() == 1) {
+              if (date.getDay() == OptionHelper.getFisrtDay()) {
                 let dataIndex = collector.length;
                 var newItem = {
                   index: dataIndex,
-                  dates: [date, date.addDays(5)]
+                  dates: [date, date.addDays(OptionHelper.getSecondDay())]
                 };
                 collector.push(newItem);
-                //$("#labor").html(TwoDateFormat(newItem)).attr("data-index", dataIndex);
-                //currentIndex = 0;//collector.length-1;
               }
             }
           }
+          //console.log(year, month)
         },
-  
+
+        OptionHelper={
+          currentOptions:function(){            
+            var opt = $(elem).data('selino');
+            return opt;
+          },
+          getFisrtDay:function(){
+            //console.log("currentOptions",OptionHelper.currentOptions());
+            return this.currentOptions()["daysTo"][0]
+          },
+          getSecondDay:function(){
+            //console.log("currentOptions",OptionHelper.currentOptions());
+            return this.currentOptions()["daysTo"][1]
+          },
+          getOptionValue:function(optionName){
+            return this.currentOptions()["optionName"]
+          },
+          
+        },
         /// format the dates
         twoDateFormat = function(data) {
+          console.log("ci",currentIndex);
+          console.log(".length",collector.length);
+          if(data==undefined)
+            return false;
+
           var d1 = data.dates[0],
             d2 = data.dates[1];
           var y = null,
             m = null,
             d = null;
-  
+            var lcl=OptionHelper.getOptionValue("locale");
           if (d2.getFullYear() == d1.getFullYear()) {
             y = d1.getFullYear();
             if (d2.getMonth() == d1.getMonth()) {
-              m = d1.toLocaleDateString("tr", {
+              m = d1.toLocaleDateString(lcl, {
                 month: "short"
               });
-              if (d2.toLocaleString("tr", {
+              if (d2.toLocaleString(lcl, {
                   day: "numeric"
                 }) ==
-                d1.toLocaleString("tr", {
+                d1.toLocaleString(lcl, {
                   day: "numeric"
                 })) {
-                d = d1.toLocaleString("tr", {
+                d = d1.toLocaleString(lcl, {
                   day: "numeric"
                 });
               } else {
-                d = d1.toLocaleString("tr", {
+                d = d1.toLocaleString(lcl, {
                   day: "numeric"
-                }) + "-" + d2.toLocaleString("tr", {
+                }) + "-" + d2.toLocaleString(lcl, {
                   day: "numeric"
                 });
               }
               return d + " " + m + " " + y;
             } else {
               //return dates;
-              return d1.toLocaleString("tr", {
+              return d1.toLocaleString(lcl, {
                   day: "numeric"
                 }) + " " +
-                d1.toLocaleDateString("tr", {
+                d1.toLocaleDateString(lcl, {
                   month: "short"
                 }) +
                 "-" +
-                d2.toLocaleString("tr", {
+                d2.toLocaleString(lcl, {
                   day: "numeric"
                 }) + " " +
-                d2.toLocaleDateString("tr", {
+                d2.toLocaleDateString(lcl, {
                   month: "short"
                 }) +
                 " " +
@@ -170,13 +213,13 @@
             }
           } else {
   
-            return d1.toLocaleDateString("tr", {
+            return d1.toLocaleDateString(lcl, {
                 day: "numeric",
                 month: "short",
                 year: "numeric"
               }) +
               "-" +
-              d2.toLocaleDateString("tr", {
+              d2.toLocaleDateString(lcl, {
                 day: "numeric",
                 month: "short",
                 year: "numeric"
@@ -220,7 +263,6 @@
   
         ///seçilen rangi ekrana yansııtr
         applySelection = function() {
-                  console.log("ci",currentIndex);
           var ci = collector[currentIndex]
           var mk = twoDateFormat(ci);
           $(elem).find("[data-id=labor]").html(mk).attr('data-index', currentIndex);
@@ -236,9 +278,14 @@
         start = function() {
           console.log("started", elem);
           var options = $(elem).data('selino');
-          for (i = 0; i < options.years.length; i++) {
-            var y = options.years[i];
+          console.log("options",options);
+          console.log("options eyars",options.years.length);
+          for (s = 0; s < options.years.length; s++) {
+          console.log("s",s);
+
+            var y = options.years[s];
             for (m = 1; m < 13; m++) {
+              //console.log(y,m)
               pring(y, m);
             }
           }
@@ -253,6 +300,7 @@
           return this.each(function() {
             var $el = $(this);
             elem = $el;
+            
             $el.data('selino', $options);
             console.log("inited", $el.data('selin'));
             if ($el.hasClass("selino-inited")) return;
