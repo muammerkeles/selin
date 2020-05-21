@@ -9,19 +9,25 @@ Komponent, belirlenen tarih aralığı içindeki haftanın seçilen günlerini l
 ```
 ```js
     $(".my-element").Selin({ 
-        years: [2019, 2020, 2021]
+        years: [2019, 2020, 2021],
+        daysTo:[2,3],
+        locale:'tr',
+        recycle:false,
     }); 
+
+
 ```
-
-Örnekte, Pazartesi - Cuma arasında kayıt üyeler listelenecek. 
-
-![image](https://user-images.githubusercontent.com/6603435/82371005-25163780-9a22-11ea-985a-07711148c081.png)
-
+|Option | Type | Default | Value |
+|---|:---:|:---:|---|
+|years  | Array []  | '2019'    | Birden fazla yıl girilebilir. |
+|daysTo | Array[]   | [1,5]     | Haftanın kaçıncı günlerinin işleneceği|
+|locale | String    | 'tr'      | Dil ve haftanın ilk  günü için lokalizasyon|
+|recycle| Boolean   | false     | true |false|
 
 ---
 
 ## Demo 
-`jsfiddle` - https://jsfiddle.net/muammerkeles/ngdajw04/ 
+ - http://muammerkeles.com/github/selin/ 
 
 ---
 

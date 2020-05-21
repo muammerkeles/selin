@@ -9,7 +9,7 @@ Selin V1.
     var Selino = function() {
       var defaults = {
           years: [new Date().getFullYear()],
-          daysTo:[1,7]    ///  haftanın bu günlerini seçer
+          daysTo:[1,5]    ///  haftanın bu günlerini seçer
         },
         elem,
         collector = [],

@@ -34,11 +34,10 @@
 
                 <code class="js">
                   &lt;script&gt; 
-                      $(&quot;.my-selin-component&quot;).Selin({ 
-                        // options 
-                        years:[2019,2020,2021],
-                        daysTo:[2-5],
-                        locale:"tr",
+                      $(&quot;.my-selin-component&quot;).Selin({ // options 
+                        years: [2019, 2020, 2021],
+                        daysTo:[2,3],  // haftanın kaçıncı günlerinin seçilecegini belirler
+                        locale:'tr', // dil ve haftanın ilk  gününü belirlemek için lokalizasyon
                         recycle:false, // dönüş bittiğinde başa sar/sarma
                       }); 
                   &lt;/script&gt;
@@ -62,7 +61,7 @@
                 $(".selino").Selin({
                   years: [2019, 2020, 2021],
                   daysTo:[2,3],  // haftanın kaçıncı günlerinin seçilecegini belirler
-                  localet:'tr', // dil ve haftanın ilk  gününü belirlemek için lokalizasyon
+                  locale:'tr', // dil ve haftanın ilk  gününü belirlemek için lokalizasyon
                   recycle:false, // dönüş bittiğinde başa sar/sarma
                 });
               }
