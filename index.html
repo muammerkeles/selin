@@ -39,6 +39,20 @@
                         daysTo:[2,3],  // haftanın kaçıncı günlerinin seçilecegini belirler
                         locale:'tr', // dil ve haftanın ilk  gününü belirlemek için lokalizasyon
                         recycle:false, // dönüş bittiğinde başa sar/sarma
+						arrows: {
+						//iconSet: 'FontAwesome',
+						//left: '<i class="fa fa-arrow-left"></i>',
+						//right: '<i class="fa fa-arrow-right"></i>',
+						iconSet: 'MaterialDesignIcons',
+						left: '<i class="mdi mdi-arrow-left"></i>',
+						right: '<i class="mdi mdi-arrow-right"></i>'
+
+					},
+					onChange: function (currentIndex, currentDates) {
+						//currentIndex, collector[currentIndex]
+						console.log("currentIndex", currentIndex);
+						console.log("currentDates", currentDates);
+					}
                       }); 
                   &lt;/script&gt;
                 </code>
@@ -63,6 +77,20 @@
                   daysTo:[2,3],  // haftanın kaçıncı günlerinin seçilecegini belirler
                   locale:'tr', // dil ve haftanın ilk  gününü belirlemek için lokalizasyon
                   recycle:false, // dönüş bittiğinde başa sar/sarma
+				  arrows: {
+						//iconSet: 'FontAwesome',
+						//left: '<i class="fa fa-arrow-left"></i>',
+						//right: '<i class="fa fa-arrow-right"></i>',
+						iconSet: 'MaterialDesignIcons',
+						left: '<i class="mdi mdi-arrow-left"></i>',
+						right: '<i class="mdi mdi-arrow-right"></i>'
+
+					},
+					onChange: function (currentIndex, currentDates) {
+						//currentIndex, collector[currentIndex]
+						console.log("currentIndex", currentIndex);
+						console.log("currentDates", currentDates);
+					}
                 });
               }
             </script>

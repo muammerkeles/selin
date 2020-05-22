@@ -13,6 +13,16 @@ Komponent, belirlenen tarih aralığı içindeki haftanın seçilen günlerini l
         daysTo:[2,3],
         locale:'tr',
         recycle:false,
+		arrows: {
+			iconSet: 'FontAwesome',
+			left: '<i class="fa fa-arrow-left"></i>',
+			right: '<i class="fa fa-arrow-right"></i>',
+		},
+		onChange: function (currentIndex, currentDates) {
+			//currentIndex, collector[currentIndex]
+			console.log("currentIndex", currentIndex);
+			console.log("currentDates", currentDates);
+		}
     }); 
 
 
@@ -23,6 +33,8 @@ Komponent, belirlenen tarih aralığı içindeki haftanın seçilen günlerini l
 |daysTo | Array[]   | [1,5]     | Haftanın kaçıncı günlerinin işleneceği|
 |locale | String    | 'tr'      | Dil ve haftanın ilk  günü için lokalizasyon|
 |recycle| Boolean   | false     | true |false|
+|arrows | array[] 	| iconSet: 'FontAwesome',left: '<i class="fa fa-arrow-left"></i>',right: '<i class="fa fa-arrow-right"></i>'|
+				
 
 ---
 
