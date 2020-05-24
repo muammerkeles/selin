@@ -1,16 +1,14 @@
 /*
 Selin V1.
 
-
-
 */
-
 (function($) {
     var Selino = function() {
         var defaults = {
             years: [new Date().getFullYear()],
             daysTo: [1, 5],    ///  haftanın bu günlerini seçer,
             locale: 'tr',
+            order: "asc",
             arrows: {
                 iconSet: 'FontAwesome',
                 left: '<i class="fa fa-arrow-left"></i>',
@@ -20,14 +18,22 @@ Selin V1.
                 //right: '<i class="mdi mdi-arrow-right"></i>'
             }
         },
-            //collector = [],
-            //currentIndex = 0,
             fill = function () {
                 var options = $(this).data('selino');
+                options.elem.empty();
+                options.currentIndex = 0;
                 if (options.collector.length == 0) {
                     console.log("Selin! ", "Data boş");
                     return false;
                 }
+                if (options.order == "asc") {
+                    options.collector.SortAsc(); 
+                    //options.currentIndex = 0;
+
+                } else {
+                    options.collector.SortAsc().reverse(); 
+                }
+
                 var elem_buttons = {
                     left: $(doms.buttons.left).clone(),
                     right: $(doms.buttons.right).clone()
@@ -57,8 +63,19 @@ Selin V1.
                         `</button>`
                     );
                 }
-                $(options.elem).find("[data-id=labor]").html(twoDateFormat(options.collector[options.currentIndex], options.locale)).
-                    attr("data-index", options.currentIndex);
+                //dc.find("button[data-index=" + (options.currentIndex) + "]").addClass("active");
+                $(options.elem).find('.my-drptrigger').on('shown.bs.dropdown', function () {
+                    var el = dc.find("button");
+                    var totalHeight = $(el).length * $(el).outerHeight(),
+                        activeElem = $(dc).find(".active"),
+                        activeHeight = (activeElem.outerHeight() * (activeElem.index() + 1)),
+                        cHeight = $(container).outerHeight();
+                    $(container).scrollTop(
+                        activeHeight < cHeight ? 0 :
+                            activeHeight - activeElem.outerHeight()
+                    );
+                });
+
                 dc.find("button[data-index]").on("click", function () {
                     var sindex = $(this).attr("data-index");
                     options.currentIndex = sindex;
@@ -70,9 +87,14 @@ Selin V1.
                 $(elem_buttons.right).bind("click", function () {
                     moveNext.call(options.elem);
                 });
-               
 
-                options.currentIndex = options.collector.length;
+                options.currentIndex = options.collector.length - 1;
+                /*$(options.elem).find("[data-id=labor]").html(
+                    twoDateFormat(options.collector[options.currentIndex], options.locale)
+                ).attr("data-index", options.currentIndex);
+                */
+                applySelection.call(options.elem);
+
             },
             show = function () { },
             doms = {
@@ -80,7 +102,7 @@ Selin V1.
                 display: `<div class="calendar-wrapper noo-justify-content-center d-flex"><div class="btn-group btn-group-lg inner-of">              
               </div>
             </div>`,
-                scene: `<div class="btn-group">
+                scene: `<div class="btn-group my-drptrigger">
                   <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span data-id="labor">initiliazing..</span>
                   </button>
@@ -105,12 +127,10 @@ Selin V1.
                 } else {
                     options.currentIndex--;
                 }
-                console.log("options 3", options);
 
                 applySelection.call(options.elem);
             },
             movePrev = function () {
-                console.log("movePrev call", this);
                 var options = $(this).data('selino');
                 if ((options.currentIndex) >= options.collector.length - 1) {
                     options.currentIndex = 0;
@@ -121,7 +141,6 @@ Selin V1.
             },
             /// create calendar datas
             pring = function (year, month) {
-                //console.log("pring", $(this));
                 var options = $(this).data('selino');
                 var currentDate = new Date(year, month, 0);
                 var currentMonth = currentDate.getMonth(); //new Date().getMonth();
@@ -139,7 +158,7 @@ Selin V1.
                     var gunDiff = DateDiff.inDays(today, date);
 
                     if (gunDiff > -1) {
-                        console.log("request is later than today!! " + year + "-" + month + "*", gunDiff);
+                        //console.log("request is later than today!! " + year + "-" + month + "*", gunDiff);
                         return false;
                     } else {
                         if (date.getDay() == options.firstDay) {
@@ -155,9 +174,8 @@ Selin V1.
                 //console.log(year, month)
             },
 
-            
             /// format the dates
-            twoDateFormat = function (data,locale) {
+            twoDateFormat = function (data, locale) {
                 if (data == undefined)
                     return false;
 
@@ -260,25 +278,32 @@ Selin V1.
             ///seçilen rangi ekrana yansııtr
             applySelection = function () {
                 var options = $(this).data('selino');
-                console.log("cure", options);
-                var ci = options.collector[options.currentIndex]
+                var ci = options.collector.filter(x => x.index == options.currentIndex)[0];
                 var mk = twoDateFormat(ci, options.locale);
-                $(options.elem).find("[data-id=labor]").html(mk).attr('data-index', options.currentIndex);
+                $(options.elem).find("[data-id=labor]").html(mk).attr('data-index', ci.index);
                 var m1 = $(options.elem).find(".resultcontainer");
                 var dc = m1.find(".list-group");
                 dc.find(".active").removeClass("active");
-                var el = dc.find("button[data-index=" + options.currentIndex + "]");
+                var el = dc.find("button[data-index=" + ci.index + "]");
                 //alert(options.currentIndex);
                 el.addClass("active");
+                options.onChange.apply(this, [options.currentIndex, options.collector[options.currentIndex]]);
 
+                //$(m1).addClass("show").scrollTop($(el).offset().top - ($(m1).height())).removeClass("show");
+                //$(m1).show().scrollTop(el.offset().top);
+                //return false;
             },
 
-            onInit = function () {
-                console.log("Selin has inited!");
+            onInit = function (o) {
+                console.log("Selin has inited!", msg);
             },
             onChange = function (f, e) {
 
-
+            },
+            reOrder = function (newOrder) {
+                var options = $(this).data('selino');
+                options.order = newOrder?? "asc";
+                fill.call($(this));
             },
             start = function () {
                 console.log("started", $(this));
@@ -286,9 +311,10 @@ Selin V1.
                 for (s = 0; s < options.years.length; s++) {
                     var y = options.years[s];
                     for (m = 1; m < 13; m++) {
-                        pring.apply(this,[y, m]);
+                        pring.apply(this, [y, m]);
                     }
                 }
+
                 fill.call($(this));
             };
       return {
@@ -308,17 +334,17 @@ Selin V1.
                   $el.addClass("selino-inited");
                   //onInit();
                   start.apply(this);
+                  $options.onInit.apply(this, [$options]);
+
               }
           });
         },
         /// events
           getDates: function () {
-              console.log("collector", options.collector);
+              
           },
           getSelectedDate: function () {
               return this.each(function () {
-                  console.log("getSelectedDate", options.collector[options.currentIndex - 1]);
-
                   if ($(this).data('selino')) {
                       return options.collector[options.currentIndex - 1];
                   }
@@ -328,30 +354,47 @@ Selin V1.
               return this.each(function () {
                   if ($(this).data('selino')) {
                       var options = $(this).data('selino');
-                      console.log("opitons", options.currentIndex);
                       options.onChange.apply(this, [options.currentIndex, options.collector[options.currentIndex]]);
                  }
               });
           },
+          reOrderTrigger: function (newOrder) {
+              return this.each(function () {
+                  console.log("newOrder", newOrder);
+                  if ($(this).data('selino')) {
+                      var options = $(this).data('selino');
+                      reOrder.apply(this, [newOrder]);
+                  }
+              });
+          },
       };
     }();
-  
-  
     $.fn.extend({
         Selin: Selino.init,
         Show: Selino.showSelin,
         GetDates: Selino.getDates,
         Apply: Selino.onChangeTrigger,
-        GetSelected: Selino.getSelectedDate
-    });
-  
-  
-  })(jQuery);
-  Date.prototype.addDays = function(days) {
+        GetSelected: Selino.getSelectedDate,
+        ReOrder: Selino.reOrderTrigger
+
+    });  
+})(jQuery);
+Date.prototype.addDays = function (days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
-  }
+}
+Array.prototype.SortAsc = function () {
+    //console.log("asdasd", this.valueOf());
+    var rm = this.valueOf().sort(function (a, b) {
+            if (a.index < b.index)
+                return 1;
+            if (a.index > b.index)
+                return -1;
+            return 0;
+        });
+        return rm;
+};
 /*
 Array.prototype.aptionsHelper = function () {
     var ops= $(this).data('selino');
