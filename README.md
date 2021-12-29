@@ -4,7 +4,7 @@ Komponent, belirlenen tarih aralığı içindeki haftanın seçilen günlerini l
 
 ```html
     <div class="my-element">
-        <!-- komponenet burada oluşturulacak -->
+        <!-- component burada oluşturulur-->
     </div>
 ```
 ```js
