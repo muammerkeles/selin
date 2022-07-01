@@ -3,7 +3,7 @@ Selin V1.
 
 */
 (function($) {
-    var Selino = function() {
+    var selino = function() {
         var defaults = {
             years: [new Date().getFullYear()],
             daysTo: [1, 5],    ///  haftanın bu günlerini seçer,
